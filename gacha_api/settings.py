@@ -17,17 +17,29 @@ ALLOWED_HOSTS = env("ALLOWED_HOSTS")
 INSTALLED_APPS = [
     "django.contrib.auth",
     "django.contrib.contenttypes",
+    "django.contrib.staticfiles",
     "rest_framework",
+    "api",
 ]
-
-CREATED_APPS = []
-
-INSTALLED_APPS += CREATED_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.middleware.common.CommonMiddleware",
 ]
+
+TEMPLATES = [
+    {
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [],
+        "APP_DIRS": True,
+    },
+]
+
+REST_FRAMEWORK = {
+    "DEFAULT_RENDERER_CLASSES": [
+        "rest_framework.renderers.BrowsableAPIRenderer",
+    ]
+}
 
 ROOT_URLCONF = "gacha_api.urls"
 WSGI_APPLICATION = "gacha_api.wsgi.application"
@@ -37,3 +49,6 @@ TIME_ZONE = "UTC"
 USE_I18N = False
 USE_L10N = False
 USE_TZ = False
+
+STATIC_ROOT = BASE_DIR / "static"
+STATIC_URL = "/static/"
