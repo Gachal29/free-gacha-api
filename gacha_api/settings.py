@@ -35,12 +35,6 @@ TEMPLATES = [
     },
 ]
 
-REST_FRAMEWORK = {
-    "DEFAULT_RENDERER_CLASSES": [
-        "rest_framework.renderers.BrowsableAPIRenderer",
-    ]
-}
-
 ROOT_URLCONF = "gacha_api.urls"
 WSGI_APPLICATION = "gacha_api.wsgi.application"
 
