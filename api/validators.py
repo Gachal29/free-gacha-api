@@ -12,14 +12,14 @@ class GachalAPIValidator:
         self.validated_data = {"data": None, "error": None}
 
     def validate(self):
-        if type(self.data) is not dict:
+        if not isinstance(self.data, dict):
             self.validated_data["error"] = {
                 "detail": API_ERROR_DATA_FORMAT.format("Request Content", "dict")
             }
             return self.validated_data
 
         contents = self.data.get("contents", None)
-        if type(contents) is not list:
+        if not isinstance(contents, list):
             self.validated_data["error"] = {
                 "detail": API_ERROR_DATA_FORMAT.format("contents", "list")
             }
@@ -31,7 +31,7 @@ class GachalAPIValidator:
         same = self.data.get("same", False)
         extraction_num = self.data.get("extraction_num", None)
         if same:
-            if type(same) is not bool:
+            if not isinstance(same, bool):
                 self.validated_data["error"] = {
                     "detail": API_ERROR_DATA_FORMAT.format("same", "boolean")
                 }
@@ -48,7 +48,7 @@ class GachalAPIValidator:
                 self.validated_data["error"] = {"detail": API_ERROR_OVER_EXTRACTION_NUM}
                 return self.validated_data
 
-        if type(extraction_num) is not int:
+        if not isinstance(extraction_num, int):
             self.validated_data["error"] = {
                 "detail": API_ERROR_DATA_FORMAT.format("extraction_num", "int")
             }
@@ -58,12 +58,13 @@ class GachalAPIValidator:
             same = False
 
         weights = []
-        if same and type(contents) is not dict:
-            new_contents = []
-            for content in contents:
-                weights.append(content.get("weight", 1))
-                new_contents.append(content.get("name", None))
-            contents = new_contents
+        if same:
+            if isinstance(contents[0], dict):
+                new_contents = []
+                for content in contents:
+                    weights.append(content.get("weight", 1))
+                    new_contents.append(content.get("name", None))
+                contents = new_contents
 
         self.validated_data["data"] = {
             "contents": contents,
