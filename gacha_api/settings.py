@@ -50,3 +50,6 @@ USE_TZ = False
 
 STATIC_ROOT = BASE_DIR / "static"
 STATIC_URL = "/static/"
+
+ADMINS = [("Gacha", "taisuke0129t@gmail.com")]
+SERVER_EMAIL = "gacha-api@localhost"
