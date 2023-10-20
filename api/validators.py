@@ -1,58 +1,55 @@
-from .error_messages import (
-    API_ERROR_DATA_FORMAT,
-    API_ERROR_NO_CONTENTS,
-    API_ERROR_OVER_EXTRACTION_NUM,
-    API_ERROR_SAME_CONSTRAIN,
-)
+from rest_framework.exceptions import ValidationError
+
+from .error_messages import ErroMessages
 
 
 class GachalAPIValidator:
+    validated_data = {"data": None}
+
     def __init__(self, **kwargs):
         self.data = kwargs["data"]
-        self.validated_data = {"data": None, "error": None}
 
     def validate(self):
         if not isinstance(self.data, dict):
-            self.validated_data["error"] = {
-                "detail": API_ERROR_DATA_FORMAT.format("Request Content", "dict")
-            }
-            return self.validated_data
+            raise ValidationError(
+                ErroMessages.API_ERROR_DATA_FORMAT.format("Request Content", "dict")
+            )
 
         contents = self.data.get("contents", None)
         if not isinstance(contents, list):
-            self.validated_data["error"] = {
-                "detail": API_ERROR_DATA_FORMAT.format("contents", "list")
-            }
-            return self.validated_data
+            raise ValidationError(
+                ErroMessages.API_ERROR_DATA_FORMAT.format("contents", "list")
+            )
         if not contents:
-            self.validated_data["error"] = {"detail": API_ERROR_NO_CONTENTS}
-            return self.validated_data
+            raise ValidationError(
+                ErroMessages.API_ERROR_NO_CONTENTS
+            )
 
         same = self.data.get("same", False)
         extraction_num = self.data.get("extraction_num", None)
         if same:
             if not isinstance(same, bool):
-                self.validated_data["error"] = {
-                    "detail": API_ERROR_DATA_FORMAT.format("same", "boolean")
-                }
-                return self.validated_data
+                raise ValidationError(
+                    ErroMessages.API_ERROR_DATA_FORMAT.format("same", "boolean")
+                )
 
             if not extraction_num:
-                self.validated_data["error"] = {"detail": API_ERROR_SAME_CONSTRAIN}
-                return self.validated_data
+                return ValidationError(
+                    ErroMessages.API_ERROR_SAME_CONSTRAIN
+                )
         else:
             if not extraction_num:
                 extraction_num = len(contents)
 
             if extraction_num > len(contents):
-                self.validated_data["error"] = {"detail": API_ERROR_OVER_EXTRACTION_NUM}
-                return self.validated_data
+                raise ValidationError(
+                    ErroMessages.API_ERROR_OVER_EXTRACTION_NUM
+                )
 
         if not isinstance(extraction_num, int):
-            self.validated_data["error"] = {
-                "detail": API_ERROR_DATA_FORMAT.format("extraction_num", "int")
-            }
-            return self.validated_data
+            raise ValidationError(
+                ErroMessages.API_ERROR_DATA_FORMAT.format("extraction_num", "int")
+            )
 
         if extraction_num == 1:
             same = False
