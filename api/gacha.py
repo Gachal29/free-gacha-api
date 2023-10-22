@@ -8,10 +8,7 @@ class Gacha:
         self.same = data["same"]
 
         if self.same:
-            if data["weights"]:
-                self.weights = data["weights"]
-            else:
-                self.weights = [1] * len(data["contents"])
+            self.weights = data["weights"]
 
     def gachal(self):
         if self.same:
